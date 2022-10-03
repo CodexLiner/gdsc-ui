@@ -1,0 +1,88 @@
+package gdsc.budgettrackerdemo
+
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*;
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import gdsc.budgettrackerdemo.ui.theme.BudgetTrackerDemoTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            BudgetTrackerDemoTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color.White,
+                ) {
+                    Box(contentAlignment = Alignment.Center){
+                        SetBudget();
+                    }
+                }
+            }
+        }
+    }
+}
+@Composable
+fun SetBudget(modifier: Modifier = Modifier){
+    var text by remember { mutableStateOf(TextFieldValue("")) }
+    Column(modifier = modifier.padding(12.dp)) {
+        OutlinedTextField(
+            modifier = modifier.fillMaxWidth(),
+            value = text,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            singleLine = true,
+            maxLines = 10,
+            label =  @Composable {
+                Text(
+                    text = "Set Budget",
+                    style = TextStyle(
+                        fontSize = 18.sp
+                    )
+                )
+            },
+            onValueChange = {
+                text = it
+            }
+        )
+        Spacer(modifier = modifier.padding(12.dp))
+        val context = LocalContext.current;
+        Button(onClick = {
+            if (!text.equals(null) && text.toString().isNotEmpty()){
+                context.startActivity(Intent(context , HomeActivity::class.java))
+            }
+        }) {
+            Row(modifier = Modifier.fillMaxWidth().padding(8.dp)  ,  horizontalArrangement = Arrangement.Center) {
+                Text(text = "Done" , textAlign = TextAlign.Center , modifier = Modifier.fillMaxWidth())
+            }
+        }
+    }
+}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    BudgetTrackerDemoTheme {
+//        Greeting("Android")
+//    }
+//}
