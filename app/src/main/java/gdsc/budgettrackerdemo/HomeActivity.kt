@@ -68,7 +68,7 @@ class HomeActivity : ComponentActivity() {
                             }
                         }
                         , content = {
-                                  Column(verticalArrangement = Arrangement.Center
+                                  Column(modifier = Modifier.padding(top = 100.dp), verticalArrangement = Arrangement.Center
                                   , horizontalAlignment = Alignment.CenterHorizontally) {
                                       ShowBudgetBar()
                                       PastData()
@@ -78,7 +78,7 @@ class HomeActivity : ComponentActivity() {
                         CustomDialog(value = "", setShowDialog = {
                             isOpened.value = it
                         }){
-                            Toast.makeText(context , it , Toast.LENGTH_LONG).show();
+//                            Toast.makeText(context , it , Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -118,13 +118,24 @@ fun ShowBudgetBar(){
                cap = StrokeCap.Square))
        }
         val fontsize : TextUnit = 39.sp;
-        Text(
-            fontSize = fontsize ,
-            textAlign = TextAlign.Center,
-            text = "10%",
-            color = colorName ,
-            fontWeight = FontWeight.Bold
-          )
+        Column(horizontalAlignment = Alignment.CenterHorizontally , verticalArrangement = Arrangement.Center) {
+            Text(
+                fontSize = fontsize ,
+                textAlign = TextAlign.Center,
+                text = "10%",
+                color = colorName ,
+                fontWeight = FontWeight.Bold
+            )
+            val fontsize : TextUnit = 20.sp;
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                fontSize = fontsize ,
+                textAlign = TextAlign.Center,
+                text = "Budget Used",
+                color = Color.Black ,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 @Composable
@@ -138,23 +149,39 @@ fun PastData(){
         Text(text = "Recents" , fontSize = fontsize , fontWeight = FontWeight(weight = 600) )
         //for space between recent and list
         Spacer(modifier = Modifier.size(10.dp))
-        LazyColumn(content = {
-            items(count = 10){
+
+        data class ListOfExpense(var barcode: String, var qty: Number)
+        val list : ArrayList<ListOfExpense> = ArrayList();
+        list.add(ListOfExpense("Party" , 20))
+        list.add(ListOfExpense("Food" , 40))
+        list.add(ListOfExpense("Rent" , 40))
+        list.add(ListOfExpense("Extra" , 50))
+        list.add(ListOfExpense("Movie" , 0))
+        list.add(ListOfExpense("Party" , 260))
+        list.add(ListOfExpense("Food" , 406))
+        list.add(ListOfExpense("Rent" , 406))
+        list.add(ListOfExpense("Extra" , 560))
+        list.add(ListOfExpense("Movie" , 56))
+
+        LazyColumn(modifier = Modifier.padding(10.dp , bottom = 20.dp), content = {
+            items(count = list.size){
                 Card(modifier = Modifier
                     .height(50.dp)
                     .fillMaxWidth()
                     .padding(1.dp) ,
                     elevation = 4.dp,
-                    backgroundColor = colorResource(id = R.color.whiteShade),
+                    backgroundColor = Color.White,
                     shape = RoundedCornerShape(10.dp)) {
                     Row(modifier = Modifier.padding(10.dp) , verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "Expense Name" , modifier = Modifier.fillMaxWidth(fraction = 0.8f))
-                        Text(text = "RS. 100" , textAlign = TextAlign.End , fontWeight = FontWeight.Bold)
+                        Text(text = list[it].barcode , modifier = Modifier.fillMaxWidth(fraction = 0.8f))
+                        Text(text = "RS. " + list[it].qty, textAlign = TextAlign.End , fontWeight = FontWeight.Bold)
                     }
                 }
+                Spacer(modifier = Modifier.size(5.dp))
             }
+
         })
-        Spacer(modifier = Modifier.size(10.dp))
+        Spacer(modifier = Modifier.size(100.dp))
 
     }
 }

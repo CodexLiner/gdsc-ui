@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -17,7 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -36,7 +40,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White,
                 ) {
-                    Box(contentAlignment = Alignment.Center){
+                    Column(verticalArrangement = Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally){
+                        WelcomeWidget()
                         SetBudget();
                     }
                 }
@@ -45,9 +50,19 @@ class MainActivity : ComponentActivity() {
     }
 }
 @Composable
+fun WelcomeWidget(){
+    val painter = painterResource(id = R.drawable.logo);
+    Column(modifier = Modifier.padding(30.dp) , verticalArrangement = Arrangement.Top , horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = "WELCOME\nSet Budget to Continue" , modifier = Modifier.padding(10.dp) ,
+        fontWeight = FontWeight.Black, fontFamily = FontFamily.Monospace , fontSize = 25.sp , textAlign = TextAlign.Center
+        )
+        Image(painter = painter, contentDescription = "logo")
+    }
+}
+@Composable
 fun SetBudget(modifier: Modifier = Modifier){
     var text by remember { mutableStateOf(TextFieldValue("")) }
-    Column(modifier = modifier.padding(12.dp)) {
+    Column(modifier = modifier.padding(29.dp)) {
         OutlinedTextField(
             modifier = modifier.fillMaxWidth(),
             value = text,
@@ -73,16 +88,11 @@ fun SetBudget(modifier: Modifier = Modifier){
                 context.startActivity(Intent(context , HomeActivity::class.java))
             }
         }) {
-            Row(modifier = Modifier.fillMaxWidth().padding(8.dp)  ,  horizontalArrangement = Arrangement.Center) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)  ,  horizontalArrangement = Arrangement.Center) {
                 Text(text = "Done" , textAlign = TextAlign.Center , modifier = Modifier.fillMaxWidth())
             }
         }
     }
 }
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//    BudgetTrackerDemoTheme {
-//        Greeting("Android")
-//    }
-//}

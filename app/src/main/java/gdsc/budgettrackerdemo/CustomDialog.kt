@@ -28,12 +28,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import java.util.*
 
 @Composable
-fun CustomDialog(value: String, setShowDialog: (Boolean) -> Unit, setValue: (String) -> Unit) {
-
+fun CustomDialog(value: String, setShowDialog: (Boolean) -> Unit, setValue: (Any) -> Unit) {
     val txtFieldError = remember { mutableStateOf("") }
-    val txtField = remember { mutableStateOf(value) }
+    val textFieldExpenseName = remember { mutableStateOf(value) }
+    val textFieldAmount = remember { mutableStateOf(value) }
 
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Surface(
@@ -76,7 +77,7 @@ fun CustomDialog(value: String, setShowDialog: (Boolean) -> Unit, setValue: (Str
                             .fillMaxWidth()
                             .border(
                                 BorderStroke(
-                                    width = 2.dp,
+                                    width = 0.9.dp,
                                     color = colorResource(id = if (txtFieldError.value.isEmpty()) gdsc.budgettrackerdemo.R.color.purple_700 else R.color.holo_red_dark)
                                 ),
                                 shape = RoundedCornerShape(10)
@@ -86,33 +87,65 @@ fun CustomDialog(value: String, setShowDialog: (Boolean) -> Unit, setValue: (Str
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent
                         ),
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.AccountBox,
-                                contentDescription = "",
-                                tint = colorResource(android.R.color.black),
-                                modifier = Modifier
-                                    .width(20.dp)
-                                    .height(20.dp)
-                            )
-                        },
+//                        leadingIcon = {
+//                            Icon(
+//                                imageVector = Icons.Filled.AccountBox,
+//                                contentDescription = "",
+//                                tint = colorResource(android.R.color.black),
+//                                modifier = Modifier
+//                                    .width(20.dp)
+//                                    .height(20.dp)
+//                            )
+//                        },
+                        placeholder = { Text(text = "Enter Name of Expense") },
+                        value = textFieldExpenseName.value,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        onValueChange = {
+                            textFieldExpenseName.value = it.take(10)
+                        })
+                    Spacer(modifier = Modifier.height(5.dp))
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(
+                                BorderStroke(
+                                    width = 0.9.dp,
+                                    color = colorResource(id = if (txtFieldError.value.isEmpty()) gdsc.budgettrackerdemo.R.color.purple_700 else R.color.holo_red_dark)
+                                ),
+                                shape = RoundedCornerShape(10)
+                            ),
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        ),
+//                        leadingIcon = {
+//                            Icon(
+//                                imageVector = Icons.Filled.AccountBox,
+//                                contentDescription = "",
+//                                tint = colorResource(android.R.color.black),
+//                                modifier = Modifier
+//                                    .width(20.dp)
+//                                    .height(20.dp)
+//                            )
+//                        },
                         placeholder = { Text(text = "Enter value") },
-                        value = txtField.value,
+                        value = textFieldAmount.value,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         onValueChange = {
-                            txtField.value = it.take(10)
+                            textFieldAmount.value = it.take(10)
                         })
-
-                    Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
 
                     Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
                         Button(
                             onClick = {
-                                if (txtField.value.isEmpty()) {
+                                if (textFieldAmount.value.isEmpty()) {
                                     txtFieldError.value = "Field can not be empty"
                                     return@Button
                                 }
-                                setValue(txtField.value)
+                                data class values(val expese : String , val amount : String)
+                                setValue(values(textFieldExpenseName.value , textFieldAmount.value))
                                 setShowDialog(false)
                             },
                             colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = gdsc.budgettrackerdemo.R.color.purple_700)),
